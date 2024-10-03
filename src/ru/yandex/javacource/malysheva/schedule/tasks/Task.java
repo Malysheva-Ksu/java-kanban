@@ -1,0 +1,78 @@
+package ru.yandex.javacource.malysheva.schedule.tasks;
+
+import ru.yandex.javacource.malysheva.schedule.manager.TaskStatus;
+
+
+import java.util.Objects;
+
+public class Task {
+    public String title;
+    private String description;
+    private int id;
+    private TaskStatus status;
+
+
+    public Task(String title, String description, TaskStatus status) {
+        this.title = title;
+        this.description = description;
+        this.setStatus(status);
+    }
+
+    public String getTitle() {
+        return  title;
+    }
+
+    public void setTitle(String newTitle) {
+        title = newTitle;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String newDescription) {
+        description = newDescription;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(Integer newId) {
+        id = newId;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Название задачи: " + title + ", Описание задачи: " + description + ", Идентификационный номер: " +
+                id + ", Статус: " + getStatus() + "./ ";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(title, task.title) &&
+                Objects.equals(description, task.description);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(title, description, status);
+        result = 31 * result;
+        return result;
+    }
+
+
+
+
+}
