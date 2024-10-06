@@ -1,12 +1,10 @@
 package ru.yandex.javacource.malysheva.schedule.tasks;
 
-import ru.yandex.javacource.malysheva.schedule.manager.TaskStatus;
-
 
 import java.util.Objects;
 
 public class Task {
-    public String title;
+    private String title;
     private String description;
     private int id;
     private TaskStatus status;
@@ -62,7 +60,7 @@ public class Task {
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
         return Objects.equals(title, task.title) &&
-                Objects.equals(description, task.description);
+                Objects.equals(description, task.description) && Objects.equals(id, task.id);
     }
 
     @Override

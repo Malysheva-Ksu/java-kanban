@@ -1,7 +1,5 @@
 package ru.yandex.javacource.malysheva.schedule.tasks;
 
-import ru.yandex.javacource.malysheva.schedule.manager.TaskStatus;
-
 public class Subtask extends Task {
     private int epicId;
 

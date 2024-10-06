@@ -2,24 +2,32 @@ package ru.yandex.javacource.malysheva.schedule.tasks;
 
 import java.util.ArrayList;
 
-import ru.yandex.javacource.malysheva.schedule.manager.TaskStatus;
-
 public class Epic extends Task {
-    private ArrayList<Integer> SubtaskList; //в листе хранятся идентификаторы сабтасков
+    private ArrayList<Integer> subtaskIds = new ArrayList<>();
 
     public Epic(String title, String description, TaskStatus status) {
         super(title, description, status);
-        // epicSubtaskList = new ArrayList<>();
+    }
 
+    public void cleanSubtaskIds() {
+        subtaskIds.clear();
+    }
+
+    public void removeSubtask(int id) {
+        subtaskIds.remove(id);
     }
 
     public void addSubtaskId(Integer subtaskId) {
-        SubtaskList.add(subtaskId);
+        subtaskIds.add(subtaskId);
     }
 
     public ArrayList<Integer> getSubtaskList() {
-        return SubtaskList;
+        if (!subtaskIds.isEmpty()) {
+            return subtaskIds;
+        }
+        return null;
     }
+
 
 
 

@@ -1,4 +1,4 @@
-package ru.yandex.javacource.malysheva.schedule.manager;
+package ru.yandex.javacource.malysheva.schedule.tasks;
 
 public enum TaskStatus {
     NEW,
