@@ -59,15 +59,12 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return Objects.equals(title, task.title) &&
-                Objects.equals(description, task.description) && Objects.equals(id, task.id);
+        return id == task.id;
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(title, description, status);
-        result = 31 * result;
-        return result;
+        return Objects.hash(title, description, id, status); // Включение id в hashCode
     }
 
 
