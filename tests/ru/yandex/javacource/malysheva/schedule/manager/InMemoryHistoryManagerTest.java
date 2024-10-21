@@ -1,8 +1,6 @@
-package ru.yandex.javacource.malysheva.schedule.manager.tests;
+package ru.yandex.javacource.malysheva.schedule.manager;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.javacource.malysheva.schedule.manager.InMemoryTaskManager;
-import ru.yandex.javacource.malysheva.schedule.manager.Managers;
 import ru.yandex.javacource.malysheva.schedule.tasks.Task;
 import ru.yandex.javacource.malysheva.schedule.tasks.TaskStatus;
 
@@ -12,7 +10,7 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void historySizeLimit() {
-        InMemoryTaskManager tManager = (InMemoryTaskManager) Managers.getDefault();
+        TaskManager tManager = Managers.getDefault();
 
         for (int i = 0; i < 11; i++) {
             Task task = new Task("i", "i", TaskStatus.NEW);

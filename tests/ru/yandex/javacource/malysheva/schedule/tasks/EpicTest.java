@@ -1,9 +1,7 @@
-package ru.yandex.javacource.malysheva.schedule.tasks.tests;
+package ru.yandex.javacource.malysheva.schedule.tasks;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.javacource.malysheva.schedule.manager.InMemoryTaskManager;
-import ru.yandex.javacource.malysheva.schedule.tasks.Epic;
-import ru.yandex.javacource.malysheva.schedule.tasks.TaskStatus;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

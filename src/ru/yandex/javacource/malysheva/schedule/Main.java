@@ -45,17 +45,17 @@ public class Main {
         System.out.println("Вызываем просмотр task1");
         taskManager.getTask(1);
         System.out.println("История просмотров:");
-        System.out.println(taskManager.getHistory());
+        taskManager.getHistory();
 
         System.out.println("Вызываем просмотр epic1");
         taskManager.getEpic(3);
         System.out.println("История просмотров:");
-        System.out.println(taskManager.getHistory());
+        taskManager.getHistory();
 
         System.out.println("Вызываем просмотр subtask1");
         taskManager.getSubtask(5);
         System.out.println("История просмотров:");
-        System.out.println(taskManager.getHistory());
+        taskManager.getHistory();
 
         System.out.println("Делаем просмотры более 10шт.");
         taskManager.getEpic(4);
@@ -66,7 +66,7 @@ public class Main {
         taskManager.getEpic(4);
         taskManager.getEpic(4);
         taskManager.getEpic(4);
-        System.out.println(taskManager.getHistory());
+        taskManager.getHistory();
 
     }
 }

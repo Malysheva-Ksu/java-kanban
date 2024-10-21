@@ -3,29 +3,26 @@ package ru.yandex.javacource.malysheva.schedule.manager;
 import ru.yandex.javacource.malysheva.schedule.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    ArrayList<Task> historyManagerList = new ArrayList<>();
+    private final List<Task> history = new ArrayList<>();
+    private final int MAX_SIZE = 10;
 
     @Override
-    public void add(Task task) {
-      //  if (!historyManagerList.contains(task)) , будущий код для избегания повторений
-            historyManagerList.add(task);
+    public void addTask(Task task) {
+        if (task == null) {
+            return;
+        }
+        if (history.size() >= MAX_SIZE) {
+            history.remove(0);
+        }
+        history.add(task);
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
-        if (historyManagerList.size() > 10) {
-            int taskTracker = 0;
-            for (int i = historyManagerList.size() - 1; i >= 0; i--) {
-                if (taskTracker < 10) {
-                    taskTracker++;
-                } else {
-                    historyManagerList.remove(i);
-                }
-            }
-        }
-        return historyManagerList;
+    public List<Task> getHistory() {
+        return new ArrayList<>(history);
     }
 
 }

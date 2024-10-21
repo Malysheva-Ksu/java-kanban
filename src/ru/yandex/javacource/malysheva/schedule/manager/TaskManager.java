@@ -6,6 +6,7 @@ import ru.yandex.javacource.malysheva.schedule.tasks.Subtask;
 import ru.yandex.javacource.malysheva.schedule.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
     //Добавить задачу.
@@ -18,14 +19,14 @@ public interface TaskManager {
     Integer addEpic(Epic epic);
 
     //Получение списка задач определенного класса
-    ArrayList<Task> getTasks();
+    List<Task> getTasks();
 
-    ArrayList<Epic> getEpics();
+    List<Epic> getEpics();
 
-    ArrayList<Subtask> getSubtasks();
+    List<Subtask> getSubtasks();
 
     //Получение списка всех подзадач определённого эпика.
-    ArrayList<Subtask> getEpicSubtasks(Epic epic);
+    List<Subtask> getEpicSubtasks(Epic epic);
 
     //Удаление всех задач
     void clearAll();
@@ -57,5 +58,5 @@ public interface TaskManager {
     // проверить и обновить статус эпика
     void updateEpicStatus(Integer epicId);
 
-    ArrayList<Task> getHistory();
+    List<Task> getHistory();
 }
