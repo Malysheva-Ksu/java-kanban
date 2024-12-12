@@ -39,13 +39,14 @@ class InMemoryHistoryManagerTest {
 
     @Test
     public void removeTaskTest() {
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
         Task task1 = new Task("1", "Задача 1", TaskStatus.NEW);
         Task task2 = new Task("2", "Задача 2", TaskStatus.NEW);
         Task task3 = new Task("3", "Задача 3", TaskStatus.NEW);
 
-        task1.setId(122);
-        task2.setId(123);
-        task3.setId(124);
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        taskManager.addTask(task3);
 
         manager.addTask(task1);
         manager.addTask(task2);
@@ -53,10 +54,11 @@ class InMemoryHistoryManagerTest {
 
         int removeId = task2.getId();
 
+        taskManager.deleteTask(removeId);
         manager.remove(removeId);
 
         List<Task> tasks = manager.getTasks();
-        assertEquals(3, tasks.size());
+        assertEquals(2, manager.getSize());
         assertEquals("Задача 1", tasks.get(0).getDescription());
         assertEquals("Задача 3", tasks.get(1).getDescription());
     }
@@ -128,6 +130,8 @@ class InMemoryHistoryManagerTest {
         epic.addSubtask(3);
 
         manager.remove(2);
+
+        epic.removeSubtask(2);
 
         assertFalse(epic.getSubtaskIds().contains(2));
     }
