@@ -26,12 +26,18 @@ class InMemoryHistoryManagerTest {
         Task task2 = new Task("2", "Задача 2", TaskStatus.NEW);
         Task task3 = new Task("3", "Задача 3", TaskStatus.NEW);
 
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
+
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        taskManager.addTask(task3);
+
         manager.addTask(task1);
         manager.addTask(task2);
         manager.addTask(task3);
 
         List<Task> tasks = manager.getHistory();
-        assertEquals(3, tasks.size(), "tasks size");
+        assertEquals(3, manager.getSize(), "tasks size");
         assertEquals("Задача 1", tasks.get(0).getDescription(), "task1");
         assertEquals("Задача 2", tasks.get(1).getDescription());
         assertEquals("Задача 3", tasks.get(2).getDescription());

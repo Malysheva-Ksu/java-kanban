@@ -5,9 +5,7 @@ import ru.yandex.javacource.malysheva.schedule.tasks.Subtask;
 import ru.yandex.javacource.malysheva.schedule.tasks.Task;
 import ru.yandex.javacource.malysheva.schedule.tasks.TaskStatus;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 

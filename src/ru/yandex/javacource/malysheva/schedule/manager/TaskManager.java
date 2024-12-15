@@ -5,7 +5,6 @@ import ru.yandex.javacource.malysheva.schedule.tasks.Epic;
 import ru.yandex.javacource.malysheva.schedule.tasks.Subtask;
 import ru.yandex.javacource.malysheva.schedule.tasks.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
