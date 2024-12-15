@@ -10,7 +10,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private final Map<Integer, Node> history;
     private int size;
 
-    private void removeNode(Node node){
+    private void removeNode(Node node) {
         if (node == null) {
             return;
         }

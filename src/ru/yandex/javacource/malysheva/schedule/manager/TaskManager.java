@@ -53,8 +53,7 @@ public interface TaskManager {
     void updateSubtask(Subtask subtask);
 
     void updateEpic(Epic epic);
-
-    // проверить и обновить статус эпика
+    
     void updateEpicStatus(Integer epicId);
 
     List<Task> getHistory();
