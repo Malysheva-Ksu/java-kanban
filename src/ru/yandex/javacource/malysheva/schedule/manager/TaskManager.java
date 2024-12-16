@@ -53,7 +53,7 @@ public interface TaskManager {
     void updateSubtask(Subtask subtask);
 
     void updateEpic(Epic epic);
-    
+
     void updateEpicStatus(Integer epicId);
 
     List<Task> getHistory();

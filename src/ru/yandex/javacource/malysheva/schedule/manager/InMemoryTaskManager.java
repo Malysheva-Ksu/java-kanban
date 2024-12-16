@@ -54,7 +54,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Integer addEpic(Epic epic) {
-
         if (epic.getSubtaskList() != null && epic.getSubtaskList().contains(epic.getId())) {
             return 0;
         }
