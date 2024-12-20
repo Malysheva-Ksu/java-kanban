@@ -89,7 +89,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return id+", "+type+", "+title+", "+status+", "+description;
+        return id + ", " + type + ", " + title + ", " + status + ", " + description;
     }
 
     @Override
