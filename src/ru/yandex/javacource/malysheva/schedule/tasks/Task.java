@@ -29,7 +29,7 @@ public class Task {
         System.out.println("Установить id эпика можно только для subtask");
     }
 
-    public static Task fromString (String value) {
+    public static Task fromString(String value) {
         String[] parts = value.split(",");
 
         if (parts.length < 5) {
