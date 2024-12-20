@@ -1,12 +1,14 @@
 package ru.yandex.javacource.malysheva.schedule.tasks;
 
+import ru.yandex.javacource.malysheva.schedule.manager.TaskType;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
     private ArrayList<Integer> subtaskIds = new ArrayList<>();
 
-    public Epic(String title, String description, TaskStatus status) {
-        super(title, description, status);
+    public Epic(String title, String description, TaskStatus status, TaskType type) {
+        super(title, description, status, type);
     }
 
     public void cleanSubtaskIds() {
@@ -14,7 +16,7 @@ public class Epic extends Task {
     }
 
     public void removeSubtask(int id) {
-        subtaskIds.remove(Integer.valueOf(id));
+        subtaskIds.remove(id);
     }
 
     public void addSubtaskId(Integer subtaskId) {
@@ -31,8 +33,5 @@ public class Epic extends Task {
         }
         return null;
     }
-
-
-
 
 }

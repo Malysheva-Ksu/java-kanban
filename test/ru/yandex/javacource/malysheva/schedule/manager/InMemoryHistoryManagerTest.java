@@ -22,9 +22,9 @@ class InMemoryHistoryManagerTest {
 
     @Test
     public void addAndGetTasksTest() {
-        Task task1 = new Task("1", "Задача 1", TaskStatus.NEW);
-        Task task2 = new Task("2", "Задача 2", TaskStatus.NEW);
-        Task task3 = new Task("3", "Задача 3", TaskStatus.NEW);
+        Task task1 = new Task("1", "Задача 1", TaskStatus.NEW, TaskType.TASK);
+        Task task2 = new Task("2", "Задача 2", TaskStatus.NEW, TaskType.TASK);
+        Task task3 = new Task("3", "Задача 3", TaskStatus.NEW, TaskType.TASK);
 
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
@@ -46,9 +46,9 @@ class InMemoryHistoryManagerTest {
     @Test
     public void removeTaskTest() {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
-        Task task1 = new Task("1", "Задача 1", TaskStatus.NEW);
-        Task task2 = new Task("2", "Задача 2", TaskStatus.NEW);
-        Task task3 = new Task("3", "Задача 3", TaskStatus.NEW);
+        Task task1 = new Task("1", "Задача 1", TaskStatus.NEW, TaskType.TASK);
+        Task task2 = new Task("2", "Задача 2", TaskStatus.NEW, TaskType.TASK);
+        Task task3 = new Task("3", "Задача 3", TaskStatus.NEW, TaskType.TASK);
 
         taskManager.addTask(task1);
         taskManager.addTask(task2);
@@ -73,8 +73,8 @@ class InMemoryHistoryManagerTest {
     public void notRetainOldIdsAfterRemovalTest() {
         boolean containsOldId = false;
 
-        Task task1 = new Task("1", "Задача 1", TaskStatus.NEW);
-        Task task2 = new Task("2", "Задача 2", TaskStatus.NEW);
+        Task task1 = new Task("1", "Задача 1", TaskStatus.NEW, TaskType.TASK);
+        Task task2 = new Task("2", "Задача 2", TaskStatus.NEW, TaskType.TASK);
         manager.addTask(task1);
         manager.addTask(task2);
 
@@ -96,7 +96,7 @@ class InMemoryHistoryManagerTest {
 
     @Test
     public void afterUpdatingTaskTest() {
-        Task task1 = new Task("1", "Задача 1", TaskStatus.NEW);
+        Task task1 = new Task("1", "Задача 1", TaskStatus.NEW, TaskType.TASK);
         manager.addTask(task1);
 
         task1.setDescription("Измененная задача 1");

@@ -1,6 +1,5 @@
 package ru.yandex.javacource.malysheva.schedule.manager;
 
-
 import ru.yandex.javacource.malysheva.schedule.tasks.Epic;
 import ru.yandex.javacource.malysheva.schedule.tasks.Subtask;
 import ru.yandex.javacource.malysheva.schedule.tasks.Task;
