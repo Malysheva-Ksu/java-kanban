@@ -11,7 +11,6 @@ public class Task {
     private int id;
     private TaskStatus status;
     private TaskType type;
-    private Integer epicId;
 
 
     public Task(String title, String description, TaskStatus status, TaskType type) {
@@ -21,34 +20,8 @@ public class Task {
         this.type = type;
     }
 
-    public int getEpicId() {
-        return epicId;
-    }
-
     public void setEpicId(int id) {
         System.out.println("Установить id эпика можно только для subtask");
-    }
-
-    public static Task fromString(String value) {
-        String[] parts = value.split(",");
-
-        if (parts.length < 5) {
-            throw new IllegalArgumentException("недостаточно данный для создания задачи");
-        }
-
-            int id = Integer.parseInt(parts[0].trim());
-            TaskType type = TaskType.valueOf(parts[1].trim());
-            String name = parts[2].trim();
-            TaskStatus status = TaskStatus.valueOf(parts[3].trim());
-            String description = parts[4].trim();
-
-            Task task = new Task(name, description, status, type);
-
-            if (parts.length == 6) {
-                int epicId = Integer.parseInt(parts[5].trim());
-                task.epicId = epicId;
-            }
-            return task;
     }
 
     public String getTitle() {
@@ -87,9 +60,9 @@ public class Task {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return id + ", " + type + ", " + title + ", " + status + ", " + description;
+    public static String toString(Task task) {
+        return task.getId() + "," + task.getType() + "," + task.getTitle() + "," + task.getStatus() + "," +
+                task.getDescription() + "," + (task.getType().equals(TaskType.SUBTASK) ? ((Subtask) task).getEpicId() : "");
     }
 
     @Override

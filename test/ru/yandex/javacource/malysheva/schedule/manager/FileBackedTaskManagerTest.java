@@ -20,7 +20,7 @@ public class FileBackedTaskManagerTest {
     @BeforeEach
     public void setUp() throws IOException {
         tempFile = File.createTempFile("task_manager_test", ".csv");
-        manager = new FileBackedTaskManager(tempFile.getAbsolutePath());
+        manager = new FileBackedTaskManager(tempFile);
     }
 
     @AfterEach

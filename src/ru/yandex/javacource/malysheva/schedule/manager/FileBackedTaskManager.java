@@ -6,31 +6,38 @@ import ru.yandex.javacource.malysheva.schedule.tasks.Task;
 import ru.yandex.javacource.malysheva.schedule.tasks.TaskStatus;
 
 import java.io.*;
+import java.util.Map;
 
-public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
-    private String filePath;
+public class FileBackedTaskManager extends InMemoryTaskManager {
+    private final File file;
+    private static final String HEADER = "id,type,name,status,description,epic";
+    private int maxId = 0;
 
-    public FileBackedTaskManager(String filePath) {
-        this.filePath = filePath;
+    public FileBackedTaskManager(File file) {
+        this.file = file;
+    }
+
+    public int getNextId() {
+        return ++maxId;
     }
 
     public void save() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            writer.write("id,type,name,status,description,epic");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(HEADER);
             writer.newLine();
 
             for (Task task : getTasks()) {
-                writer.write(task.toString());
+                writer.write(task.toString(task));
                 writer.newLine();
             }
 
             for (Epic epic : getEpics()) {
-                writer.write(epic.toString());
+                writer.write(epic.toString(epic));
                 writer.newLine();
             }
 
             for (Subtask subtask : getSubtasks()) {
-                writer.write(subtask.toString());
+                writer.write(subtask.toString(subtask));
                 writer.newLine();
             }
 
@@ -40,7 +47,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager manager = new FileBackedTaskManager(file.getAbsolutePath());
+        FileBackedTaskManager manager = new FileBackedTaskManager(file);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
@@ -48,19 +55,33 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
             while ((line = reader.readLine()) != null && !line.trim().isEmpty()) {
                 String[] parts = line.split(",");
-                if (parts[1].contains("EPIC")) {
+
+                TaskType taskType = TaskType.valueOf(parts[1].toUpperCase());
+
+                if (taskType == TaskType.EPIC) {
                     Epic epic = getEpic(line);
 
                         manager.addEpic(epic);
 
-                } else if (parts[1].contains("SUBTASK")) {
+                } else if (taskType == TaskType.SUBTASK) {
                     Subtask subtask = getSubtask(line);
 
                         manager.addSubtask(subtask);
-                } else if (parts[1].contains("TASK")) {
+                } else if (taskType == TaskType.TASK) {
                     Task task = getTask(line);
 
                         manager.addTask(task);
+                }
+
+                int currentId = Integer.parseInt(parts[0].trim());
+                if (currentId > manager.maxId) {
+                    manager.maxId = currentId;
+                }
+
+                for (Map.Entry<Integer, Subtask> e : manager.subtasks.entrySet()) {
+                    final Subtask subtask = e.getValue();
+                    final Epic epic = manager.getEpics().get(subtask.getEpicId());
+                    epic.addSubtaskId(subtask.getId());
                 }
             }
         } catch (IOException e) {
@@ -81,6 +102,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
         Task task;
         task = new Task(name, description, status, type);
+        task.setId(id);
 
         return task;
     }
@@ -97,6 +119,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         Subtask subtask;
         subtask = new Subtask(name, description, status, type);
         int epicId = Integer.parseInt(parts[5].trim());
+        subtask.setId(id);
         subtask.setEpicId(epicId);
 
         return subtask;
@@ -113,12 +136,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
         Epic epic;
         epic = new Epic(name, description, status, type);
+        epic.setId(id);
 
         return epic;
     }
 
     @Override
     public int addTask(Task task) {
+        task.setId(getNextId());
         super.addTask(task);
         save();
         return task.getId();
@@ -126,6 +151,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     @Override
     public Integer addSubtask(Subtask subtask) {
+        subtask.setId(getNextId());
         super.addSubtask(subtask);
         save();
         return subtask.getId();
@@ -133,6 +159,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     @Override
     public Integer addEpic(Epic epic) {
+        epic.setId(getNextId());
         super.addEpic(epic);
         save();
         return epic.getId();
