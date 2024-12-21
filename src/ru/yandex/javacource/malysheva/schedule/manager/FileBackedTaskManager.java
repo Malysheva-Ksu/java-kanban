@@ -80,7 +80,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
                 for (Map.Entry<Integer, Subtask> e : manager.subtasks.entrySet()) {
                     final Subtask subtask = e.getValue();
-                    final Epic epic = manager.getEpics().get(subtask.getEpicId());
+                    final Epic epic = manager.epics.get(subtask.getEpicId());
                     epic.addSubtaskId(subtask.getId());
                 }
             }
