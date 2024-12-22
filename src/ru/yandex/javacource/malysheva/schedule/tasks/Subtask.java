@@ -7,8 +7,8 @@ import java.util.Objects;
 public class Subtask extends Task {
     private int epicId;
 
-    public Subtask(String title, String description, TaskStatus status, TaskType type) {
-    super(title, description, status, type);
+    public Subtask(TaskType type, String title, TaskStatus status, String description) {
+    super(type, title, status, description);
     }
 
     public int getEpicId() {

@@ -13,7 +13,7 @@ public class Task {
     private TaskType type;
 
 
-    public Task(String title, String description, TaskStatus status, TaskType type) {
+    public Task(TaskType type, String title, TaskStatus status, String description) {
         this.title = title;
         this.description = description;
         this.setStatus(status);
@@ -63,6 +63,11 @@ public class Task {
     public static String toString(Task task) {
         return task.getId() + "," + task.getType() + "," + task.getTitle() + "," + task.getStatus() + "," +
                 task.getDescription() + "," + (task.getType().equals(TaskType.SUBTASK) ? ((Subtask) task).getEpicId() : "");
+    }
+
+    @Override
+    public String toString() {
+        return "Тип задачи: " + type + " Название: " + title + " Статус: " + status + " Описание: " + description + " ID: " + id;
     }
 
     @Override
