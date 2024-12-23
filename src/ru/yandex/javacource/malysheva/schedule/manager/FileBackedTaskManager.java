@@ -11,7 +11,6 @@ import java.util.Map;
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
     private static final String HEADER = "id,type,name,status,description,epic";
-    private int maxId = 0;
 
     public FileBackedTaskManager(File file) {
         this.file = file;
@@ -87,7 +86,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             throw new ManagerSaveException("Произошла ошибка при загрузке файла", e);
         }
 
-        manager.maxId = localMaxId;
+        manager.generatorId = localMaxId;
 
         return manager;
     }
@@ -124,23 +123,23 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public int addTask(Task task) {
-        super.addTask(task);
+        int id = super.addTask(task);
         save();
-        return task.getId();
+        return id;
     }
 
     @Override
     public Integer addSubtask(Subtask subtask) {
-        super.addSubtask(subtask);
+        int id = super.addSubtask(subtask);
         save();
-        return subtask.getId();
+        return id;
     }
 
     @Override
     public Integer addEpic(Epic epic) {
-        super.addEpic(epic);
+        int id = super.addEpic(epic);
         save();
-        return epic.getId();
+        return id;
     }
 
     @Override
