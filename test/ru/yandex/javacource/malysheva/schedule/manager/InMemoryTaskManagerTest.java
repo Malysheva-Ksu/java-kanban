@@ -23,7 +23,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     void testTaskImmutabilityOnAdd() {
-        Task task = new Task("title", "description", TaskStatus.NEW, TaskType.TASK);
+        Task task = new Task(TaskType.TASK, "title", TaskStatus.NEW, "description");
         int taskId = taskManager.addTask(task);
 
         Task addedTask = taskManager.getTask(taskId);
@@ -36,10 +36,10 @@ class InMemoryTaskManagerTest {
 
     @Test
     void addEpicAsSubtask() {
-        Epic epic = new Epic("title", "description", TaskStatus.NEW, TaskType.EPIC);
+        Epic epic = new Epic(TaskType.EPIC, "title", TaskStatus.NEW, "description");
         int epicId = taskManager.addEpic(epic);
 
-        Subtask subtask = new Subtask("title", "description", TaskStatus.NEW, TaskType.SUBTASK);
+        Subtask subtask = new Subtask(TaskType.SUBTASK, "title", TaskStatus.NEW, "description");
         subtask.setEpicId(epicId);
         subtask.setId(epicId);
         int result = taskManager.addSubtask(subtask);
@@ -49,10 +49,10 @@ class InMemoryTaskManagerTest {
 
     @Test
     void addSubtaskAsEpic() {
-        Epic epic = new Epic("title", "description", TaskStatus.NEW, TaskType.EPIC);
+        Epic epic = new Epic(TaskType.EPIC, "title", TaskStatus.NEW, "description");
         int epicId = taskManager.addEpic(epic);
 
-        Subtask subtask = new Subtask("title", "description", TaskStatus.NEW, TaskType.SUBTASK);
+        Subtask subtask = new Subtask(TaskType.SUBTASK, "title", TaskStatus.NEW, "description");
         subtask.setEpicId(epicId);
         int subtaskId = taskManager.addSubtask(subtask);
 
@@ -65,17 +65,17 @@ class InMemoryTaskManagerTest {
 
     @Test
     void addDifferentTypeOfTasksAndFindItById() {
-        Task task = new Task("title", "description", TaskStatus.NEW, TaskType.TASK);
+        Task task = new Task(TaskType.TASK, "title", TaskStatus.NEW, "description");
         int taskId = taskManager.addTask(task);
         Task task2 = taskManager.getTask(taskId);
         assertEquals(task, task2);
 
-        Epic epic = new Epic("title", "description", TaskStatus.NEW, TaskType.EPIC);
+        Epic epic = new Epic(TaskType.EPIC, "title", TaskStatus.NEW, "description");
         int epicId = taskManager.addEpic(epic);
         Epic epic2 = taskManager.getEpic(epicId);
         assertEquals(epic, epic2);
 
-        Subtask subtask = new Subtask("title", "description", TaskStatus.NEW, TaskType.SUBTASK);
+        Subtask subtask = new Subtask(TaskType.SUBTASK, "title", TaskStatus.NEW, "description");
         subtask.setEpicId(epicId);
         int subtaskId = taskManager.addSubtask(subtask);
         Subtask subtask2 = taskManager.getSubtask(subtaskId);

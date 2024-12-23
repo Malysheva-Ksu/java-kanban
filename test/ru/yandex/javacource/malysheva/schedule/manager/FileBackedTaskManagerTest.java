@@ -41,15 +41,15 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void testAddAndSaveTasks() {
-        Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW, TaskType.TASK);
-        Epic epic1 = new Epic("Epic 1", "Description 3", TaskStatus.NEW, TaskType.EPIC);
+        Task task1 = new Task(TaskType.TASK, "Task 1", TaskStatus.NEW, "Description 1");
+        Epic epic1 = new Epic(TaskType.EPIC, "Epic 1", TaskStatus.NEW, "Description 3");
 
         manager.addTask(task1);
         manager.addEpic(epic1);
 
         int epicId = epic1.getId();
 
-        Subtask subtask1 = new Subtask("Subtask 1", "Description 2", TaskStatus.NEW, TaskType.SUBTASK);
+        Subtask subtask1 = new Subtask(TaskType.SUBTASK, "Subtask 1", TaskStatus.NEW, "Description 2");
         subtask1.setEpicId(epicId);
         manager.addSubtask(subtask1);
 

@@ -12,9 +12,9 @@ class EpicTest {
     @Test
     void epicsEqualWithSameId() {
         InMemoryTaskManager tManager = new InMemoryTaskManager();
-        Epic epic1 = new Epic("task1", "description1", TaskStatus.NEW, TaskType.EPIC);
-        Epic epic2 = new Epic("task2", "description2", TaskStatus.NEW, TaskType.EPIC);
-        Epic epic3 = new Epic("task1", "description1", TaskStatus.NEW, TaskType.EPIC);
+        Epic epic1 = new Epic(TaskType.EPIC, "task1", TaskStatus.NEW, "description1");
+        Epic epic2 = new Epic(TaskType.EPIC, "task2", TaskStatus.NEW, "description2");
+        Epic epic3 = new Epic(TaskType.EPIC, "task1", TaskStatus.NEW, "description1");
 
         tManager.addEpic(epic1);
         tManager.addEpic(epic2);

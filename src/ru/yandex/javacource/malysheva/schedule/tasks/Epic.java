@@ -7,8 +7,8 @@ import java.util.ArrayList;
 public class Epic extends Task {
     private ArrayList<Integer> subtaskIds = new ArrayList<>();
 
-    public Epic(String title, String description, TaskStatus status, TaskType type) {
-        super(title, description, status, type);
+    public Epic(TaskType type, String title, TaskStatus status, String description) {
+        super(type, title, status, description);
     }
 
     public void cleanSubtaskIds() {

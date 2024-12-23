@@ -12,12 +12,12 @@ class SubtaskTest {
     @Test
     void subtasksEqualWithSameId() {
         InMemoryTaskManager tManager = new InMemoryTaskManager();
-        Epic epic1 = new Epic("1","1",TaskStatus.NEW, TaskType.EPIC);
+        Epic epic1 = new Epic(TaskType.EPIC, "1", TaskStatus.NEW, "1" );
         tManager.addEpic(epic1);
         int epicId = epic1.getId();
-        Subtask subtask1 = new Subtask("task1", "description1", TaskStatus.NEW, TaskType.SUBTASK);
-        Subtask subtask2 = new Subtask("task2", "description2", TaskStatus.NEW, TaskType.SUBTASK);
-        Subtask subtask3 = new Subtask("task2", "description1", TaskStatus.NEW, TaskType.SUBTASK);
+        Subtask subtask1 = new Subtask(TaskType.SUBTASK, "task1", TaskStatus.NEW, "description1");
+        Subtask subtask2 = new Subtask(TaskType.SUBTASK, "task2", TaskStatus.NEW, "description2");
+        Subtask subtask3 = new Subtask(TaskType.SUBTASK, "task2", TaskStatus.NEW, "description1");
 
         subtask1.setEpicId(epicId);
         subtask2.setEpicId(epicId);

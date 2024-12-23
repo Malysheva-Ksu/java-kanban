@@ -12,9 +12,9 @@ class TaskTest {
     @Test
     void tasksEqualWithSameId() {
         InMemoryTaskManager tManager = new InMemoryTaskManager();
-        Task task1 = new Task("task1", "description1", TaskStatus.NEW, TaskType.TASK);
-        Task task2 = new Task("task2", "description2", TaskStatus.NEW, TaskType.TASK);
-        Task task3 = new Task("task1", "description1", TaskStatus.NEW, TaskType.TASK);
+        Task task1 = new Task(TaskType.TASK,"task1", TaskStatus.NEW, "description1");
+        Task task2 = new Task(TaskType.TASK,"task2", TaskStatus.NEW,"description2");
+        Task task3 = new Task(TaskType.TASK,"task1", TaskStatus.NEW,"description1");
 
         tManager.addTask(task1);
         tManager.addTask(task2);
