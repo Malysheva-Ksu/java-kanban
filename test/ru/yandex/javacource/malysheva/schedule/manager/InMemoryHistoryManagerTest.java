@@ -2,15 +2,16 @@ package ru.yandex.javacource.malysheva.schedule.manager;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.javacource.malysheva.schedule.tasks.Duration;
 import ru.yandex.javacource.malysheva.schedule.tasks.Task;
 import ru.yandex.javacource.malysheva.schedule.tasks.TaskStatus;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
     private InMemoryHistoryManager manager;
@@ -21,10 +22,96 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
+    public void testEmptyHistory() {
+        assertTrue(manager.getHistory().isEmpty(), "История должна быть пустой");
+    }
+
+    @Test
+    public void testDuplicateTaskInHistory() {
+        Task task = new Task(TaskType.TASK, "Задача 1", TaskStatus.NEW,
+                "Описание задачи 1", new Duration(30), LocalDateTime.now());
+
+        manager.addTask(task);
+        manager.addTask(task);
+
+        List<Task> history = manager.getHistory();
+        assertEquals(1, history.size(), "История должна содержать только одну задачу");
+        assertEquals(task, history.get(0), "История должна содержать добавленную задачу");
+    }
+
+    @Test
+    public void testRemoveTaskFromHistory_Start() {
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
+        Task task1 = new Task(TaskType.TASK, "Задача 1", TaskStatus.NEW,
+                "Описание задачи 1", new Duration(30), LocalDateTime.now());
+        Task task2 = new Task(TaskType.TASK, "Задача 2", TaskStatus.NEW,
+                "Описание задачи 2", new Duration(30), LocalDateTime.now().plusMinutes(30));
+
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        manager.addTask(task1);
+        manager.addTask(task2);
+
+        manager.remove(task1.getId());
+
+        List<Task> history = manager.getHistory();
+        assertEquals(1, history.size(), "История должна содержать одну задачу после удаления");
+        assertEquals(task2, history.get(0), "История должна содержать только задачу 2");
+    }
+
+    @Test
+    public void testRemoveTaskFromHistory_End() {
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
+        Task task1 = new Task(TaskType.TASK, "Задача 1", TaskStatus.NEW,
+                "Описание задачи 1", new Duration(30), LocalDateTime.now());
+        Task task2 = new Task(TaskType.TASK, "Задача 2", TaskStatus.NEW,
+                "Описание задачи 2", new Duration(30), LocalDateTime.now().plusMinutes(30));
+
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        manager.addTask(task1);
+        manager.addTask(task2);
+
+        manager.remove(task2.getId());
+
+        List<Task> history = manager.getHistory();
+        assertEquals(1, history.size(), "История должна содержать одну задачу после удаления");
+        assertEquals(task1, history.get(0), "История должна содержать только задачу 1");
+    }
+
+    @Test
+    public void testRemoveTaskFromHistory_Middle() {
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
+        Task task1 = new Task(TaskType.TASK, "Задача 1", TaskStatus.NEW,
+                "Описание задачи 1", new Duration(30), LocalDateTime.now());
+        Task task2 = new Task(TaskType.TASK, "Задача 2", TaskStatus.NEW,
+                "Описание задачи 2", new Duration(30), LocalDateTime.now().plusMinutes(30));
+        Task task3 = new Task(TaskType.TASK, "Задача 3", TaskStatus.NEW,
+                "Описание задачи 3", new Duration(30), LocalDateTime.now().plusMinutes(60));
+
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        taskManager.addTask(task3);
+        manager.addTask(task1);
+        manager.addTask(task2);
+        manager.addTask(task3);
+
+        manager.remove(task2.getId());
+
+        List<Task> history = manager.getHistory();
+        assertEquals(2, history.size(), "История должна содержать две задачи после удаления");
+        assertEquals(task1, history.get(0), "Первая задача должна быть task 1");
+        assertEquals(task3, history.get(1), "Вторая задача должна быть task 3");
+    }
+
+    @Test
     public void addAndGetTasksTest() {
-        Task task1 = new Task(TaskType.TASK,"1", TaskStatus.NEW, "Задача 1");
-        Task task2 = new Task(TaskType.TASK, "2", TaskStatus.NEW, "Задача 2");
-        Task task3 = new Task(TaskType.TASK, "3", TaskStatus.NEW, "Задача 3");
+        Task task1 = new Task(TaskType.TASK,"1", TaskStatus.NEW, "Задача 1", new Duration(10),
+                LocalDateTime.now());
+        Task task2 = new Task(TaskType.TASK, "2", TaskStatus.NEW, "Задача 2", new Duration(10),
+                LocalDateTime.now().plusMinutes(10));
+        Task task3 = new Task(TaskType.TASK, "3", TaskStatus.NEW, "Задача 3", new Duration(10),
+                LocalDateTime.now().plusMinutes(20));
 
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
@@ -46,9 +133,12 @@ class InMemoryHistoryManagerTest {
     @Test
     public void removeTaskTest() {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
-        Task task1 = new Task(TaskType.TASK,"1", TaskStatus.NEW,"Задача 1");
-        Task task2 = new Task(TaskType.TASK,"2", TaskStatus.NEW, "Задача 2");
-        Task task3 = new Task(TaskType.TASK,"3", TaskStatus.NEW, "Задача 3");
+        Task task1 = new Task(TaskType.TASK,"1", TaskStatus.NEW,"Задача 1", new Duration(10),
+                LocalDateTime.now());
+        Task task2 = new Task(TaskType.TASK,"2", TaskStatus.NEW, "Задача 2", new Duration(10),
+                LocalDateTime.now().plusMinutes(10));
+        Task task3 = new Task(TaskType.TASK,"3", TaskStatus.NEW, "Задача 3", new Duration(10),
+                LocalDateTime.now().plusMinutes(20));
 
         taskManager.addTask(task1);
         taskManager.addTask(task2);
@@ -73,8 +163,10 @@ class InMemoryHistoryManagerTest {
     public void notRetainOldIdsAfterRemovalTest() {
         boolean containsOldId = false;
 
-        Task task1 = new Task(TaskType.TASK, "1", TaskStatus.NEW, "Задача 1");
-        Task task2 = new Task(TaskType.TASK, "2", TaskStatus.NEW, "Задача 2");
+        Task task1 = new Task(TaskType.TASK, "1", TaskStatus.NEW, "Задача 1", new Duration(10),
+                LocalDateTime.now());
+        Task task2 = new Task(TaskType.TASK, "2", TaskStatus.NEW, "Задача 2", new Duration(10),
+                LocalDateTime.now().plusMinutes(10));
         manager.addTask(task1);
         manager.addTask(task2);
 
@@ -96,7 +188,8 @@ class InMemoryHistoryManagerTest {
 
     @Test
     public void afterUpdatingTaskTest() {
-        Task task1 = new Task(TaskType.TASK, "1", TaskStatus.NEW, "Задача 1");
+        Task task1 = new Task(TaskType.TASK, "1", TaskStatus.NEW, "Задача 1", new Duration(10),
+                LocalDateTime.now());
         manager.addTask(task1);
 
         task1.setDescription("Измененная задача 1");
