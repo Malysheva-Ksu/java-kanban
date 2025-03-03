@@ -152,9 +152,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             duration = parseTaskDuration(keyValuePairs[5].trim());
 
             startTime = LocalDateTime.parse(keyValuePairs[6].trim());
-        }
-
-        else if (type == TaskType.SUBTASK) {
+        } else if (type == TaskType.SUBTASK) {
             if (keyValuePairs.length < 8) {
                 throw new IllegalArgumentException("Подзадача требует указания ID эпика и параметров: " + value);
             }

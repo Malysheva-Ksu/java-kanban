@@ -1,5 +1,4 @@
 package ru.yandex.javacource.malysheva.schedule.manager;
-import org.junit.jupiter.api.BeforeEach;
 import ru.yandex.javacource.malysheva.schedule.tasks.Duration;
 
 import java.io.BufferedReader;
