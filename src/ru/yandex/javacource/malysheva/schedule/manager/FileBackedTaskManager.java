@@ -102,7 +102,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             for (Map.Entry<Integer, Subtask> e : manager.subtasks.entrySet()) {
                 final Subtask subtask = e.getValue();
                 final Epic epic = manager.epics.get(subtask.getEpicId());
-                if(epic != null) {
+                if (epic != null) {
                     epic.addSubtask(subtask);
                 }
             }
@@ -329,7 +329,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void deleteEpic(int id) {
         Task epic = super.epics.get(id);
-        if(epic != null) {
+        if (epic != null) {
             prioritizedTasks.remove(epic);
         }
         super.deleteEpic(id);
