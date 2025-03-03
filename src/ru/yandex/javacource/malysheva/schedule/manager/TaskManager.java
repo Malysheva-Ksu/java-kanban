@@ -7,7 +7,7 @@ import ru.yandex.javacource.malysheva.schedule.tasks.Task;
 import java.util.List;
 
 public interface TaskManager {
-    //Добавить задачу.
+
     int addTask(Task task);
 
     //Добавить подзадачу.
@@ -50,6 +50,8 @@ public interface TaskManager {
     void deleteEpic(int id);
 
     void updateSubtask(Subtask subtask);
+
+    void updateTask(Task task);
 
     void updateEpic(Epic epic);
 

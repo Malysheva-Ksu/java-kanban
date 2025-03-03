@@ -3,6 +3,7 @@ package ru.yandex.javacource.malysheva.schedule.tasks;
 
 import ru.yandex.javacource.malysheva.schedule.manager.TaskType;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -11,13 +12,37 @@ public class Task {
     private int id;
     private TaskStatus status;
     private TaskType type;
+    private Duration duration;
+    private LocalDateTime startTime;
 
 
-    public Task(TaskType type, String title, TaskStatus status, String description) {
+    public Task(TaskType type, String title, TaskStatus status, String description, Duration duration, LocalDateTime startTime) {
         this.title = title;
         this.description = description;
         this.setStatus(status);
         this.type = type;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plusMinutes(duration.getMinutes());
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
     }
 
     public void setEpicId(int id) {
@@ -67,7 +92,9 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Тип задачи: " + type + " Название: " + title + " Статус: " + status + " Описание: " + description + " ID: " + id;
+        return "Тип задачи: " + type + " Название: " + title + " Статус: " + status + " Описание: " + description
+                + " ID: " + id + " Продолжительность: " + duration + " Время начала: " + startTime
+                + ", Время завершения: " + getEndTime();
     }
 
     @Override

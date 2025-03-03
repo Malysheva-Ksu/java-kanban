@@ -3,10 +3,9 @@ package ru.yandex.javacource.malysheva.schedule;
 import ru.yandex.javacource.malysheva.schedule.manager.InMemoryTaskManager;
 import ru.yandex.javacource.malysheva.schedule.manager.Managers;
 import ru.yandex.javacource.malysheva.schedule.manager.TaskType;
-import ru.yandex.javacource.malysheva.schedule.tasks.TaskStatus;
-import ru.yandex.javacource.malysheva.schedule.tasks.Epic;
-import ru.yandex.javacource.malysheva.schedule.tasks.Subtask;
-import ru.yandex.javacource.malysheva.schedule.tasks.Task;
+import ru.yandex.javacource.malysheva.schedule.tasks.*;
+
+import java.time.LocalDateTime;
 
 
 public class Main {
@@ -15,31 +14,36 @@ public class Main {
     public static void main(String[] args) {
         InMemoryTaskManager taskManager = (InMemoryTaskManager) Managers.getDefault();
 
-        Task task1 = new Task(TaskType.TASK,"Task1", TaskStatus.IN_PROGRESS, "description task1");
+        Task task1 = new Task(TaskType.TASK,"Task1", TaskStatus.IN_PROGRESS, "description task1", new Duration(10), LocalDateTime.now());
         int task1Id = taskManager.addTask(task1);
         System.out.println("task1 добавлено. Идентификатор номер: " + task1Id);
 
-        Task task2 = new Task(TaskType.TASK, "Task2", TaskStatus.IN_PROGRESS, "description task2");
+        Task task2 = new Task(TaskType.TASK, "Task2", TaskStatus.IN_PROGRESS, "description task2", new Duration(10), LocalDateTime.now());
         int task2Id = taskManager.addTask(task2);
         System.out.println("task2 добавлено. Идентификатор номер: " + task2Id);
 
-        Epic epic1 = new Epic(TaskType.EPIC, "epic1", TaskStatus.IN_PROGRESS, "description epic1");
+        Epic epic1 = new Epic(TaskType.EPIC, "epic1", TaskStatus.IN_PROGRESS, "description epic1",
+                new Duration(10), LocalDateTime.now());
         int epic1Id = taskManager.addEpic(epic1);
         System.out.println("epic1 добавлено. Идентификатор номер: " + epic1Id);
 
-        Epic epic2 = new Epic(TaskType.EPIC, "epic2", TaskStatus.NEW, "description epic2");
+        Epic epic2 = new Epic(TaskType.EPIC, "epic2", TaskStatus.NEW, "description epic2",
+                new Duration(10), LocalDateTime.now());
         int epic2Id = taskManager.addEpic(epic2);
         System.out.println("epic2 добавлено. Идентификатор номер: " + epic2Id);
 
-        Subtask subtask1 = new Subtask(TaskType.SUBTASK, "subtask1", TaskStatus.NEW, "description subtask1");
+        Subtask subtask1 = new Subtask(TaskType.SUBTASK, "subtask1", TaskStatus.NEW, "description subtask1",
+                new Duration(10), LocalDateTime.now());
         int sub1Id = taskManager.addSubtask(subtask1);
         System.out.println("subtask1 добавлено. Идентификатор номер: " + sub1Id);
 
-        Subtask subtask2 = new Subtask(TaskType.SUBTASK, "subtask2", TaskStatus.NEW, "description subtask2");
+        Subtask subtask2 = new Subtask(TaskType.SUBTASK, "subtask2", TaskStatus.NEW, "description subtask2",
+                new Duration(10), LocalDateTime.now());
         int sub2Id = taskManager.addSubtask(subtask2);
         System.out.println("subtask2 добавлено. Идентификатор номер: " + sub2Id);
 
-        Subtask subtask3 = new Subtask(TaskType.SUBTASK, "subtask3", TaskStatus.NEW, "description subtask3");
+        Subtask subtask3 = new Subtask(TaskType.SUBTASK, "subtask3", TaskStatus.NEW, "description subtask3",
+                new Duration(10), LocalDateTime.now());
         int sub3Id = taskManager.addSubtask(subtask3);
         System.out.println("subtask3 добавлено. Идентификатор номер: " + sub3Id);
 
