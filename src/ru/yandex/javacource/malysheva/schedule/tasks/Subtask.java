@@ -2,13 +2,14 @@ package ru.yandex.javacource.malysheva.schedule.tasks;
 
 import ru.yandex.javacource.malysheva.schedule.manager.TaskType;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Subtask extends Task {
     private int epicId;
 
-    public Subtask(TaskType type, String title, TaskStatus status, String description) {
-    super(type, title, status, description);
+    public Subtask(TaskType type, String title, TaskStatus status, String description, Duration duration, LocalDateTime startTime) {
+    super(type, title, status, description, duration, startTime);
     }
 
     public int getEpicId() {

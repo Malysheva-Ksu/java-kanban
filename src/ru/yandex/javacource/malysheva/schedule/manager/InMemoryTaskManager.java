@@ -45,6 +45,7 @@ public class InMemoryTaskManager implements TaskManager {
             subtasks.put(id, subtask);
 
             epic.addSubtaskId(id);
+            epic.addSubtask(subtask);
             updateEpicStatus(epicId);
 
             return id;
@@ -55,7 +56,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Integer addEpic(Epic epic) {
-        if (epic.getSubtaskList() != null && epic.getSubtaskList().contains(epic.getId())) {
+        if (epic.getSubtaskIds() != null && epic.getSubtaskIds().contains(epic.getId())) {
             return 0;
         }
 
@@ -67,28 +68,25 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getTasks() {
-        return new ArrayList<>(tasks.values());
+    public List<Task> getTasks() {
+        return tasks.values().stream().toList();
     }
 
     @Override
-    public ArrayList<Epic> getEpics() {
-        return new ArrayList<>(epics.values());
+    public List<Epic> getEpics() {
+        return epics.values().stream().toList();
     }
 
     @Override
-    public ArrayList<Subtask> getSubtasks() {
-        return new ArrayList<>(subtasks.values());
+    public List<Subtask> getSubtasks() {
+        return subtasks.values().stream().toList();
     }
 
     @Override
-    public ArrayList<Subtask> getEpicSubtasks(Epic epic) {
-        ArrayList<Subtask> subtasksInEpic = new ArrayList<>();
-
-        for (int subId : epic.getSubtaskList()) {
-            subtasksInEpic.add(subtasks.get(subId));
-        }
-        return subtasksInEpic;
+    public List<Subtask> getEpicSubtasks(Epic epic) {
+        return epic.getSubtaskIds().stream()
+                .map(subtasks::get)
+                .toList();
     }
 
     @Override
@@ -128,10 +126,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearSubtasks() {
-        for (Epic epic : epics.values()) {
+        epics.values().forEach(epic -> {
             epic.cleanSubtaskIds();
             updateEpicStatus(epic.getId());
-        }
+        });
         subtasks.clear();
     }
 
@@ -156,7 +154,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
         Epic epic = epics.get(subtask.getEpicId());
-        epic.removeSubtask(id);
+        epic.removeSubtask(subtask);
         updateEpicStatus(epic.getId());
     }
 
@@ -166,9 +164,27 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic == null) {
             return;
         }
-        for (Integer subtaskId : epic.getSubtaskList()) {
+        for (Integer subtaskId : epic.getSubtaskIds()) {
             subtasks.remove(subtaskId);
         }
+    }
+
+    @Override
+    public void updateTask(Task task) {
+        int id = task.getId();
+        Task savedTask = tasks.get(id);
+
+        if (savedTask == null) {
+            return;
+        }
+
+        savedTask.setTitle(task.getTitle());
+        savedTask.setDescription(task.getDescription());
+        savedTask.setStatus(task.getStatus());
+        savedTask.setDuration(task.getDuration());
+        savedTask.setStartTime(task.getStartTime());
+
+        tasks.put(id, savedTask);
     }
 
     @Override
@@ -197,7 +213,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (savedEpic == null) {
             return;
         }
-        epic.setSubtaskIds(savedEpic.getSubtaskList());
+        epic.setSubtaskIds(savedEpic.getSubtaskIds());
         epic.setStatus(savedEpic.getStatus());
         epics.put(epic.getId(), epic);
     }
@@ -208,24 +224,23 @@ public class InMemoryTaskManager implements TaskManager {
 
         if (epic == null) return;
 
-        int checkInt = 0;
-        for (int id : epic.getSubtaskList()) {
-            Subtask subtask = subtasks.get(id);
+        List<TaskStatus> statuses = epic.getSubtaskIds().stream()
+                .map(subtasks::get)
+                .map(Subtask::getStatus)
+                .toList();
 
-            if (subtask.getStatus() == TaskStatus.NEW && !(checkInt == 2)) {
-                checkInt = 1;
-            } else if (subtask.getStatus() == TaskStatus.IN_PROGRESS && !(checkInt == 1)) {
-                checkInt = 2;
-            }
-
-        }
-
-        if (checkInt == 0) {
-            epic.setStatus(TaskStatus.DONE);
-        } else if (checkInt == 1) {
+        if (statuses.isEmpty()) {
             epic.setStatus(TaskStatus.NEW);
-        } else {
+            return;
+        }
+        if (statuses.stream().allMatch(status -> status == TaskStatus.DONE)) {
+            epic.setStatus(TaskStatus.DONE);
+        } else if (statuses.stream().anyMatch(status -> status == TaskStatus.IN_PROGRESS) ||
+                (statuses.stream().anyMatch(status -> status == TaskStatus.DONE) &&
+                        statuses.stream().anyMatch(status -> status == TaskStatus.NEW))) {
             epic.setStatus(TaskStatus.IN_PROGRESS);
+        } else {
+            epic.setStatus(TaskStatus.NEW);
         }
     }
 
