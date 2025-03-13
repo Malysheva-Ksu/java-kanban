@@ -3,6 +3,7 @@ package ru.yandex.javacource.malysheva.schedule.manager;
 import ru.yandex.javacource.malysheva.schedule.tasks.*;
 
 import java.io.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -123,8 +124,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (task.getType().equals(TaskType.SUBTASK)) {
             taskString += ((Subtask) task).getEpicId() + ",";
         }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
-            taskString += task.getDuration() + "," + task.getStartTime();
+            taskString += task.getDuration() + "," + task.getStartTime().format(formatter);
 
         return taskString;
     }

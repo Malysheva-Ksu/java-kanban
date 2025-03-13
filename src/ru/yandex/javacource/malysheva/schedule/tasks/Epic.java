@@ -8,16 +8,14 @@ import java.util.List;
 
 public class Epic extends Task {
     private ArrayList<Integer> subtaskIds = new ArrayList<>();
-    private List<Subtask> subtasks;
+    private List<Subtask> subtasks = new ArrayList<>();
     private LocalDateTime endTime;
-    private Duration duration;
-    private LocalDateTime startTime;
+
 
     public Epic(TaskType type, String title, TaskStatus status, String description, Duration duration, LocalDateTime startTime) {
         super(type, title, status, description, duration, startTime);
-        this.duration = duration;
-        this.startTime = startTime;
         this.subtasks = new ArrayList<>();
+        this.subtaskIds = new ArrayList<>();
     }
 
     public void addSubtaskId(Integer subtaskId) {
@@ -25,10 +23,14 @@ public class Epic extends Task {
     }
 
     public void calculateDuration() {
-        if (subtaskIds.isEmpty()) {
-            this.duration = new Duration(0);
-            this.startTime = null;
-            this.endTime = null;
+        if (subtasks == null) {
+            subtasks = new ArrayList<>();
+        }
+
+        if (subtaskIds == null) {
+            setDuration(new Duration(0));
+            setStartTime(LocalDateTime.now());
+            endTime = getStartTime().plusMinutes(getDuration().getMinutes());
             return;
         }
 
@@ -48,18 +50,18 @@ public class Epic extends Task {
             }
         }
 
-        this.duration = new Duration(totalDuration);
-        this.startTime = earliestStartTime;
+        setDuration(new Duration(totalDuration));
+        setStartTime(earliestStartTime);
         this.endTime = latestEndTime;
     }
 
     public Duration getDuration() {
         calculateDuration();
-        return duration;
+        return getDuration();
     }
 
     public LocalDateTime getStartTime() {
-        return startTime;
+        return getStartTime();
     }
 
     public LocalDateTime getEndTime() {
@@ -90,14 +92,14 @@ public class Epic extends Task {
         if (!subtasks.isEmpty()) {
             return subtasks;
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public ArrayList<Integer> getSubtaskIds() {
-        if (!subtaskIds.isEmpty()) {
+        if (!(subtaskIds ==null)) {
             return subtaskIds;
         }
-        return null;
+        return new ArrayList<>();
     }
 
 }

@@ -1,5 +1,6 @@
 package ru.yandex.javacource.malysheva.schedule.manager;
 
+import ru.yandex.javacource.malysheva.schedule.HttpServer.NotFoundException;
 import ru.yandex.javacource.malysheva.schedule.tasks.Epic;
 import ru.yandex.javacource.malysheva.schedule.tasks.Subtask;
 import ru.yandex.javacource.malysheva.schedule.tasks.Task;
@@ -92,6 +93,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask(int id) {
         final Task task = tasks.get(id);
+        if (task == null) {
+            throw new NotFoundException("Task not found for id: " + id);
+        }
+
         historyManager.addTask(task);
         return task;
     }
@@ -99,6 +104,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtask(int id) {
         Subtask subtask = subtasks.get(id);
+        if (subtask == null) {
+            throw new NotFoundException("Task not found for id: " + id);
+        }
 
             historyManager.addTask(subtask);
             return subtask;
@@ -107,6 +115,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpic(int id) {
         Epic epic = epics.get(id);
+        if (epic == null) {
+            throw new NotFoundException("Task not found for id: " + id);
+        }
 
             historyManager.addTask(epic);
             return epic;
@@ -150,7 +161,7 @@ public class InMemoryTaskManager implements TaskManager {
         Subtask subtask = subtasks.remove(id);
 
         if (subtask == null) {
-            return;
+            throw new NotFoundException("Task not found for id: " + id);
         }
 
         Epic epic = epics.get(subtask.getEpicId());
@@ -162,7 +173,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteEpic(int id) {
         final Epic epic = epics.remove(id);
         if (epic == null) {
-            return;
+            throw new NotFoundException("Task not found for id: " + id);
         }
         for (Integer subtaskId : epic.getSubtaskIds()) {
             subtasks.remove(subtaskId);
@@ -244,10 +255,19 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    public List<Task> getAllTasks() {
+        return new ArrayList<>(tasks.values());
+    }
+
     @Override
     public List<Task> getHistory() {
         List<Task> history = historyManager.getHistory();
         return new ArrayList<>(history);
+    }
+
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return List.of();
     }
 
 }
