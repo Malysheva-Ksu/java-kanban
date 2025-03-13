@@ -54,10 +54,10 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
                 LocalDateTime.now());
         int epicId = taskManager.addEpic(epic);
         Subtask subtask1 = new Subtask(TaskType.SUBTASK, "Подзадача 1", TaskStatus.NEW, "Описание подзадачи 1",
-                new Duration(30), LocalDateTime.now());
+                new Duration(30), LocalDateTime.now().plusMinutes(30));
         subtask1.setEpicId(epicId);
         Subtask subtask2 = new Subtask(TaskType.SUBTASK, "Подзадача 2", TaskStatus.NEW, "Описание подзадачи 2",
-                new Duration(30), LocalDateTime.now().plusMinutes(30));
+                new Duration(30), LocalDateTime.now().plusMinutes(60));
         subtask2.setEpicId(epicId);
 
         taskManager.addSubtask(subtask1);
@@ -231,4 +231,3 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
 }
-

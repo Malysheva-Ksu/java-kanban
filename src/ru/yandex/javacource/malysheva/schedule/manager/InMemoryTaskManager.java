@@ -153,6 +153,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTask(int id) {
+        Task task = tasks.get(id);
+        if (task == null) {
+            throw new NotFoundException("Task not found for id: " + id);
+        }
+
+        historyManager.remove(id);
+
         tasks.remove(id);
     }
 

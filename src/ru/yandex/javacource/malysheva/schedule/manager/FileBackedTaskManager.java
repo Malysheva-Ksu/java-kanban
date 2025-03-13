@@ -4,6 +4,7 @@ import ru.yandex.javacource.malysheva.schedule.tasks.*;
 
 import java.io.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -28,27 +29,42 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write(HEADER);
+            writer.write("id,type,name,status,description,epic,duration,startTime");
             writer.newLine();
 
             for (Task task : getTasks()) {
-                writer.write(toString(task));
+                writer.write(taskToString(task));
                 writer.newLine();
             }
 
-            for (Task epic : getEpics()) {
-                writer.write(toString(epic));
+            for (Epic epic : getEpics()) {
+                writer.write(taskToString(epic));
                 writer.newLine();
             }
 
-            for (Task subtask : getSubtasks()) {
-                writer.write(toString(subtask));
+            for (Subtask subtask : getSubtasks()) {
+                writer.write(taskToString(subtask));
                 writer.newLine();
             }
-
         } catch (IOException e) {
-            throw new ManagerSaveException("Произошла ошибка во время сохранения файла", e);
+            throw new ManagerSaveException("Ошибка сохранения в файл", e);
         }
+    }
+
+    private String taskToString(Task task) {
+        String epicId = task instanceof Subtask ?
+                String.valueOf(((Subtask) task).getEpicId()) : "";
+
+        return String.format("%d,%s,%s,%s,%s,%s,%d,%s",
+                task.getId(),
+                task.getType(),
+                task.getTitle(),
+                task.getStatus(),
+                task.getDescription(),
+                epicId,
+                task.getDuration() != null ? task.getDuration().getMinutes() : 0,
+                task.getStartTime() != null ? task.getStartTime().toString() : ""
+        );
     }
 
     public static FileBackedTaskManager loadFromFile(File file) {
@@ -71,7 +87,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
                 Task task;
                 try {
-                    task = taskFromString(line);
+                    task = fromString(line);
                 } catch (Exception e) {
                     continue;
                 }
@@ -131,47 +147,62 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return taskString;
     }
 
-    public static Task taskFromString(String value) {
-        final String[] keyValuePairs = value.split(",");
+    private static Task fromString(String value) {
+        try {
+            String[] fields = value.split(",", -1);
 
-        if (keyValuePairs.length < 6) {
-            throw new IllegalArgumentException("Неправильный формат строки: " + value);
-        }
-
-        int id = Integer.parseInt(keyValuePairs[0].trim());
-        TaskType type = TaskType.valueOf(keyValuePairs[1].trim().toUpperCase());
-        String name = keyValuePairs[2].trim();
-        TaskStatus status = TaskStatus.valueOf(keyValuePairs[3].trim().toUpperCase());
-        String description = keyValuePairs[4].trim();
-        Duration duration = null;
-        LocalDateTime startTime = null;
-
-        if (type == TaskType.TASK || type == TaskType.EPIC) {
-            if (keyValuePairs.length < 7) {
-                throw new IllegalArgumentException("Необходимые параметры отсутствуют для задачи или эпика: " + value);
+            if (fields.length < 6) {
+                return null;
             }
 
-            duration = parseTaskDuration(keyValuePairs[5].trim());
+            int id = Integer.parseInt(fields[0]);
+            TaskType type = TaskType.valueOf(fields[1]);
+            String name = fields[2];
+            TaskStatus status = TaskStatus.valueOf(fields[3]);
+            String description = fields[4];
 
-            startTime = LocalDateTime.parse(keyValuePairs[6].trim());
-        } else if (type == TaskType.SUBTASK) {
-            if (keyValuePairs.length < 8) {
-                throw new IllegalArgumentException("Подзадача требует указания ID эпика и параметров: " + value);
+            Duration duration = new Duration(0);
+            LocalDateTime startTime = null;
+
+            if (fields.length > 6) {
+                try {
+                    duration = new Duration(Integer.parseInt(fields[6]));
+                } catch (NumberFormatException e) {
+                    duration = new Duration(0);
+                }
+
+                if (fields.length > 7 && !fields[7].isEmpty()) {
+                    try {
+                        startTime = LocalDateTime.parse(fields[7]);
+                    } catch (DateTimeParseException e) {
+                        startTime = null;
+                    }
+                }
             }
 
-            int epicId = Integer.parseInt(keyValuePairs[5].trim());
-            duration = parseTaskDuration(keyValuePairs[6].trim());
-            startTime = LocalDateTime.parse(keyValuePairs[7].trim());
+            Task task;
+            switch (type) {
+                case EPIC:
+                    task = new Epic(type, name, status, description, duration, startTime);
+                    break;
+                case SUBTASK:
+                    task = new Subtask(type, name, status, description, duration, startTime);
+                    if (fields.length > 5 && !fields[5].isEmpty()) {
+                        int epicId = Integer.parseInt(fields[5]);
+                        ((Subtask) task).setEpicId(epicId);
+                    }
+                    break;
+                default:
+                    task = new Task(type, name, status, description, duration, startTime);
+            }
 
-            Subtask subtask = new Subtask(type, name, status, description, duration, startTime);
-            subtask.setEpicId(epicId);
-            subtask.setId(id);
-            return subtask;
+            task.setId(id);
+            return task;
+        } catch (Exception e) {
+            System.err.println("Ошибка при парсинге строки: " + value);
+            e.printStackTrace();
+            return null;
         }
-
-        Epic epic = new Epic(type, name, status, description, duration, startTime);
-        epic.setId(id);
-        return epic;
     }
 
     private static Duration parseTaskDuration(String durationString) {

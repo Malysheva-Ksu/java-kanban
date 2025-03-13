@@ -5,6 +5,7 @@ import ru.yandex.javacource.malysheva.schedule.manager.TaskType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Integer> subtaskIds = new ArrayList<>();
@@ -55,17 +56,36 @@ public class Epic extends Task {
         this.endTime = latestEndTime;
     }
 
+    @Override
     public Duration getDuration() {
-        calculateDuration();
-        return getDuration();
+        if (subtasks == null || subtasks.isEmpty()) {
+            return super.getDuration();
+        }
+        return subtasks.stream()
+                .map(Subtask::getDuration)
+                .filter(Objects::nonNull)
+                .reduce(Duration.ZERO, (d1, d2) -> {
+                    if (d1 == null) return d2;
+                    if (d2 == null) return d1;
+                    return d1.plus(d2);
+                });
     }
 
+    @Override
     public LocalDateTime getStartTime() {
-        return getStartTime();
+        if (subtasks == null || subtasks.isEmpty()) {
+            return super.getStartTime();
+        }
+
+        return subtasks.stream()
+                .map(Subtask::getStartTime)
+                .filter(Objects::nonNull)
+                .min(LocalDateTime::compareTo)
+                .orElse(super.getStartTime());
     }
 
     public LocalDateTime getEndTime() {
-
+        calculateDuration();
         return endTime;
     }
 

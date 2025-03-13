@@ -2,6 +2,7 @@ package ru.yandex.javacource.malysheva.schedule.manager;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.javacource.malysheva.schedule.HttpServer.NotFoundException;
 import ru.yandex.javacource.malysheva.schedule.tasks.Duration;
 import ru.yandex.javacource.malysheva.schedule.tasks.Task;
 import ru.yandex.javacource.malysheva.schedule.tasks.TaskStatus;
@@ -45,11 +46,14 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     public void testDeleteTask() {
         Task task = new Task(TaskType.TASK, "Задача 1", TaskStatus.NEW, "Описание 1", new Duration(30),
                 LocalDateTime.now());
+
         int id = taskManager.addTask(task);
+
+        assertNotNull(taskManager.getTask(id), "Задача должна существовать перед удалением");
+
         taskManager.deleteTask(id);
-        assertNull(taskManager.getTask(id));
+
+        assertThrows(NotFoundException.class, () -> taskManager.getTask(id),
+                "При попытке получить удаленную задачу должно выбрасываться исключение");
     }
 }
-
-
-
