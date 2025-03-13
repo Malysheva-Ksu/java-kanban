@@ -304,7 +304,7 @@ public class TaskHandler implements HttpHandler {
             throw new IllegalArgumentException("Failed to parse JSON: " + e.getMessage(), e);
         }
     }
-    
+
     private void enrichTaskWithDefaultValues(Task task) {
         if (task == null) {
             log("Received null task, throwing exception");
