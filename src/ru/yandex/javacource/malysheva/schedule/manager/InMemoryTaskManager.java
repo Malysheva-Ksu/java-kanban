@@ -90,23 +90,33 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTask(int id) {
+    public Task getTask(int id) throws NotFoundException {
         final Task task = tasks.get(id);
+        if (task == null) {
+            throw new NotFoundException("Task not found for id: " + id);
+        }
+
         historyManager.addTask(task);
         return task;
     }
 
     @Override
-    public Subtask getSubtask(int id) {
+    public Subtask getSubtask(int id) throws NotFoundException {
         Subtask subtask = subtasks.get(id);
+        if (subtask == null) {
+            throw new NotFoundException("Task not found for id: " + id);
+        }
 
             historyManager.addTask(subtask);
             return subtask;
     }
 
     @Override
-    public Epic getEpic(int id) {
+    public Epic getEpic(int id) throws NotFoundException {
         Epic epic = epics.get(id);
+        if (epic == null) {
+            throw new NotFoundException("Task not found for id: " + id);
+        }
 
             historyManager.addTask(epic);
             return epic;
@@ -142,16 +152,16 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTask(int id) {
+        Task task = tasks.get(id);
+
+        historyManager.remove(id);
+
         tasks.remove(id);
     }
 
     @Override
     public void deleteSubtask(int id) {
         Subtask subtask = subtasks.remove(id);
-
-        if (subtask == null) {
-            return;
-        }
 
         Epic epic = epics.get(subtask.getEpicId());
         epic.removeSubtask(subtask);
@@ -161,9 +171,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteEpic(int id) {
         final Epic epic = epics.remove(id);
-        if (epic == null) {
-            return;
-        }
         for (Integer subtaskId : epic.getSubtaskIds()) {
             subtasks.remove(subtaskId);
         }
@@ -244,10 +251,19 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    public List<Task> getAllTasks() {
+        return new ArrayList<>(tasks.values());
+    }
+
     @Override
     public List<Task> getHistory() {
         List<Task> history = historyManager.getHistory();
         return new ArrayList<>(history);
+    }
+
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return List.of();
     }
 
 }

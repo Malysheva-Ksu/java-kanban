@@ -21,7 +21,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     protected abstract T createTaskManager();
 
     @Test
-    public void testAddTask() {
+    public void testAddTask() throws NotFoundException {
         Task task = new Task(TaskType.TASK, "Задача 1", TaskStatus.NEW, "Описание 1", new Duration(30),
                 LocalDateTime.now());
         int id = taskManager.addTask(task);
@@ -30,7 +30,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testUpdateTask() {
+    public void testUpdateTask() throws NotFoundException {
         Task task = new Task(TaskType.TASK, "Задача 1", TaskStatus.NEW, "Описание 1", new Duration(30),
                 LocalDateTime.now());
         int id = taskManager.addTask(task);
@@ -42,14 +42,17 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testDeleteTask() {
+    public void testDeleteTask() throws NotFoundException {
         Task task = new Task(TaskType.TASK, "Задача 1", TaskStatus.NEW, "Описание 1", new Duration(30),
                 LocalDateTime.now());
+
         int id = taskManager.addTask(task);
+
+        assertNotNull(taskManager.getTask(id), "Задача должна существовать перед удалением");
+
         taskManager.deleteTask(id);
-        assertNull(taskManager.getTask(id));
+
+        assertThrows(NotFoundException.class, () -> taskManager.getTask(id),
+                "При попытке получить удаленную задачу должно выбрасываться исключение");
     }
 }
-
-
-
