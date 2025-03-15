@@ -1,7 +1,8 @@
-package ru.yandex.javacource.malysheva.schedule.HttpServer;
+package ru.yandex.javacource.malysheva.schedule.httpServer.handler;
 
 import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
+import ru.yandex.javacource.malysheva.schedule.manager.NotFoundException;
 import ru.yandex.javacource.malysheva.schedule.manager.TaskManager;
 import ru.yandex.javacource.malysheva.schedule.manager.TaskType;
 import ru.yandex.javacource.malysheva.schedule.tasks.Duration;
@@ -118,18 +119,11 @@ public class EpicHandler extends BaseHttpHandler {
                     int epicId = Integer.parseInt(pathParts[2]);
                     Epic epic = taskManager.getEpic(epicId);
 
-                    if (epic == null) {
-                        sendErrorResponse(exchange, 404, "Epic not found");
-                        return;
-                    }
-
                     taskManager.deleteEpic(epicId);
                     sendResponse(exchange, "Epic deleted", 200);
                 } catch (NumberFormatException e) {
                     sendErrorResponse(exchange, 400, "Invalid epic ID");
                 }
-            } else {
-                sendErrorResponse(exchange, 404, "Not found");
             }
         } catch (Exception e) {
             System.err.println("Unexpected Error: " + e.getMessage());
@@ -154,6 +148,8 @@ public class EpicHandler extends BaseHttpHandler {
                 }
             } catch (NumberFormatException e) {
                 sendErrorResponse(exchange, 400, "Invalid epic ID");
+            } catch (NotFoundException e) {
+                throw new RuntimeException(e);
             }
         } else {
             sendErrorResponse(exchange, 404, "Not found");

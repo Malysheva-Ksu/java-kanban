@@ -1,6 +1,5 @@
 package ru.yandex.javacource.malysheva.schedule.manager;
 
-import ru.yandex.javacource.malysheva.schedule.HttpServer.NotFoundException;
 import ru.yandex.javacource.malysheva.schedule.tasks.Epic;
 import ru.yandex.javacource.malysheva.schedule.tasks.Subtask;
 import ru.yandex.javacource.malysheva.schedule.tasks.Task;
@@ -91,7 +90,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTask(int id) {
+    public Task getTask(int id) throws NotFoundException {
         final Task task = tasks.get(id);
         if (task == null) {
             throw new NotFoundException("Task not found for id: " + id);
@@ -102,7 +101,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Subtask getSubtask(int id) {
+    public Subtask getSubtask(int id) throws NotFoundException {
         Subtask subtask = subtasks.get(id);
         if (subtask == null) {
             throw new NotFoundException("Task not found for id: " + id);
@@ -113,7 +112,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic getEpic(int id) {
+    public Epic getEpic(int id) throws NotFoundException {
         Epic epic = epics.get(id);
         if (epic == null) {
             throw new NotFoundException("Task not found for id: " + id);
@@ -154,9 +153,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTask(int id) {
         Task task = tasks.get(id);
-        if (task == null) {
-            throw new NotFoundException("Task not found for id: " + id);
-        }
 
         historyManager.remove(id);
 
@@ -167,10 +163,6 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteSubtask(int id) {
         Subtask subtask = subtasks.remove(id);
 
-        if (subtask == null) {
-            throw new NotFoundException("Task not found for id: " + id);
-        }
-
         Epic epic = epics.get(subtask.getEpicId());
         epic.removeSubtask(subtask);
         updateEpicStatus(epic.getId());
@@ -179,9 +171,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteEpic(int id) {
         final Epic epic = epics.remove(id);
-        if (epic == null) {
-            throw new NotFoundException("Task not found for id: " + id);
-        }
         for (Integer subtaskId : epic.getSubtaskIds()) {
             subtasks.remove(subtaskId);
         }

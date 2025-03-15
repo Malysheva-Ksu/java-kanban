@@ -1,4 +1,4 @@
-package ru.yandex.javacource.malysheva.schedule.HttpServer;
+package ru.yandex.javacource.malysheva.schedule.httpServer.adapter;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;

@@ -49,7 +49,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
 
 
     @Test
-    public void testEpicStatus_AllNew() {
+    public void testEpicStatus_AllNew() throws NotFoundException {
         Epic epic = new Epic(TaskType.EPIC, "Эпик 1", TaskStatus.NEW, "Описание эпик 1", new Duration(30),
                 LocalDateTime.now());
         int epicId = taskManager.addEpic(epic);
@@ -68,7 +68,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    public void testEpicStatus_AllDone() {
+    public void testEpicStatus_AllDone() throws NotFoundException {
         Epic epic = new Epic(TaskType.EPIC, "Эпик 1", TaskStatus.NEW, "Описание эпик 1", new Duration(30),
                 LocalDateTime.now());
         int epicId = taskManager.addEpic(epic);
@@ -87,7 +87,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    public void testEpicStatus_InProgress() {
+    public void testEpicStatus_InProgress() throws NotFoundException {
         Epic epic = new Epic(TaskType.EPIC, "Эпик 1", TaskStatus.NEW, "Описание эпик 1", new Duration(30),
                 LocalDateTime.now());
         int epicId = taskManager.addEpic(epic);
@@ -102,7 +102,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    public void testEpicStatus_MixedStatus() {
+    public void testEpicStatus_MixedStatus() throws NotFoundException {
         Epic epic = new Epic(TaskType.EPIC, "Эпик 1", TaskStatus.NEW, "Описание эпик 1", new Duration(30),
                 LocalDateTime.now());
         int epicId = taskManager.addEpic(epic);

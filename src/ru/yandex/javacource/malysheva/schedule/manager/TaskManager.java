@@ -36,18 +36,18 @@ public interface TaskManager {
     void clearEpics();
 
     //Получение по идентификатору
-    Task getTask(int id);
+    Task getTask(int id) throws NotFoundException;
 
-    Subtask getSubtask(int id);
+    Subtask getSubtask(int id) throws NotFoundException;
 
-    Epic getEpic(int id);
+    Epic getEpic(int id) throws NotFoundException;
 
     //удаление по идентификатору
     void deleteTask(int id);
 
     void deleteSubtask(int id);
 
-    void deleteEpic(int id);
+    void deleteEpic(int id) throws NotFoundException;
 
     void updateSubtask(Subtask subtask);
 

@@ -1,8 +1,9 @@
-package ru.yandex.javacource.malysheva.schedule.HttpServer;
+package ru.yandex.javacource.malysheva.schedule.httpServer.handler;
 
 import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import ru.yandex.javacource.malysheva.schedule.manager.NotFoundException;
 import ru.yandex.javacource.malysheva.schedule.manager.TaskManager;
 import ru.yandex.javacource.malysheva.schedule.manager.TaskType;
 import ru.yandex.javacource.malysheva.schedule.tasks.Duration;
@@ -83,7 +84,7 @@ public class SubtaskHandler implements HttpHandler {
         }
     }
 
-    private void handleGetSubtask(HttpExchange exchange, int subtaskId) throws IOException {
+    private void handleGetSubtask(HttpExchange exchange, int subtaskId) throws IOException, NotFoundException {
         Subtask subtask = taskManager.getSubtask(subtaskId);
         if (subtask == null) {
             sendErrorResponse(exchange, 404, "Subtask not found");
@@ -150,12 +151,8 @@ public class SubtaskHandler implements HttpHandler {
         }
     }
 
-    private void handleDeleteSubtask(HttpExchange exchange, int subtaskId) throws IOException {
+    private void handleDeleteSubtask(HttpExchange exchange, int subtaskId) throws IOException, NotFoundException {
         Subtask subtask = taskManager.getSubtask(subtaskId);
-        if (subtask == null) {
-            sendErrorResponse(exchange, 404, "Subtask not found");
-            return;
-        }
         taskManager.deleteSubtask(subtaskId);
         sendResponse(exchange, "Subtask deleted", 200);
     }

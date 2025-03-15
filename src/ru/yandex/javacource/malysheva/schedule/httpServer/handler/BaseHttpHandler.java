@@ -1,9 +1,10 @@
-package ru.yandex.javacource.malysheva.schedule.HttpServer;
+package ru.yandex.javacource.malysheva.schedule.httpServer.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import ru.yandex.javacource.malysheva.schedule.httpServer.adapter.LocalDateTimeAdapter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,10 +37,6 @@ public abstract class BaseHttpHandler implements HttpHandler {
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(responseBytes);
         }
-    }
-
-    protected void sendNotFound(HttpExchange exchange) throws IOException {
-        sendJson(exchange, new ErrorResponse("Resource not found"), 404);
     }
 
     protected void sendHasInteractions(HttpExchange exchange) throws IOException {

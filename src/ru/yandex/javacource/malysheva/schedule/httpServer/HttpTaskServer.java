@@ -1,8 +1,10 @@
-package ru.yandex.javacource.malysheva.schedule.HttpServer;
+package ru.yandex.javacource.malysheva.schedule.httpServer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
+import ru.yandex.javacource.malysheva.schedule.httpServer.adapter.LocalDateTimeAdapter;
+import ru.yandex.javacource.malysheva.schedule.httpServer.handler.*;
 import ru.yandex.javacource.malysheva.schedule.manager.TaskManager;
 
 import java.io.IOException;

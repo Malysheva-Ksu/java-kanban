@@ -1,4 +1,4 @@
-package ru.yandex.javacource.malysheva.schedule.HttpServer;
+package ru.yandex.javacource.malysheva.schedule.httpServer.handler;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
@@ -10,11 +10,11 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class PrioritizedHandler extends BaseHttpHandler {
+public class HistoryHandler extends BaseHttpHandler {
     private final TaskManager taskManager;
     private final Gson gson;
 
-    public PrioritizedHandler(TaskManager taskManager, Gson gson) {
+    public HistoryHandler(TaskManager taskManager, Gson gson) {
         this.taskManager = taskManager;
         this.gson = gson;
     }
@@ -25,7 +25,7 @@ public class PrioritizedHandler extends BaseHttpHandler {
             String method = exchange.getRequestMethod();
 
             if ("GET".equals(method)) {
-                handleGetPrioritizedTasks(exchange);
+                handleGetHistory(exchange);
             } else {
                 sendErrorResponse(exchange, 405, "Method Not Allowed");
             }
@@ -36,15 +36,15 @@ public class PrioritizedHandler extends BaseHttpHandler {
         }
     }
 
-    private void handleGetPrioritizedTasks(HttpExchange exchange) throws IOException {
-        List<Task> prioritizedTasks = taskManager.getPrioritizedTasks();
+    private void handleGetHistory(HttpExchange exchange) throws IOException {
+        List<Task> history = taskManager.getHistory();
 
-        if (prioritizedTasks == null || prioritizedTasks.isEmpty()) {
-            sendErrorResponse(exchange, 404, "No prioritized tasks found");
+        if (history == null || history.isEmpty()) {
+            sendErrorResponse(exchange, 404, "History is empty");
             return;
         }
 
-        String response = gson.toJson(prioritizedTasks);
+        String response = gson.toJson(history);
         sendResponse(exchange, response, 200);
     }
 

@@ -17,7 +17,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    public void testEpicStatus_AllNew() {
+    public void testEpicStatus_AllNew() throws NotFoundException {
         Epic epic = new Epic(TaskType.EPIC, "Эпик 1", TaskStatus.NEW, "Описание эпик 1", new Duration(30),
                 LocalDateTime.now());
         int epicId = taskManager.addEpic(epic);
@@ -36,7 +36,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    public void testEpicStatus_AllDone() {
+    public void testEpicStatus_AllDone() throws NotFoundException {
         Epic epic = new Epic(TaskType.EPIC, "Эпик 1", TaskStatus.NEW, "Описание эпик 1", new Duration(30),
                 LocalDateTime.now());
         int epicId = taskManager.addEpic(epic);
@@ -55,7 +55,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    public void testEpicStatus_InProgress() {
+    public void testEpicStatus_InProgress() throws NotFoundException {
         Epic epic = new Epic(TaskType.EPIC, "Эпик 1", TaskStatus.NEW, "Описание эпик 1", new Duration(30),
                 LocalDateTime.now());
         int epicId = taskManager.addEpic(epic);
@@ -70,7 +70,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    public void testEpicStatus_MixedStatus() {
+    public void testEpicStatus_MixedStatus() throws NotFoundException {
         Epic epic = new Epic(TaskType.EPIC, "Эпик 1", TaskStatus.NEW, "Описание эпик 1", new Duration(30),
                 LocalDateTime.now());
         int epicId = taskManager.addEpic(epic);
@@ -89,7 +89,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    void testTaskImmutabilityOnAdd() {
+    void testTaskImmutabilityOnAdd() throws NotFoundException {
         Task task = new Task(TaskType.TASK, "title", TaskStatus.NEW, "description", new Duration(10),
                 LocalDateTime.now());
         int taskId = taskManager.addTask(task);
@@ -136,7 +136,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
 
     @Test
-    void addDifferentTypeOfTasksAndFindItById() {
+    void addDifferentTypeOfTasksAndFindItById() throws NotFoundException {
         Task task = new Task(TaskType.TASK, "title", TaskStatus.NEW, "description", new Duration(10),
                 LocalDateTime.now());
         int taskId = taskManager.addTask(task);

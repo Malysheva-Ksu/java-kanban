@@ -2,6 +2,7 @@ package ru.yandex.javacource.malysheva.schedule;
 
 import ru.yandex.javacource.malysheva.schedule.manager.InMemoryTaskManager;
 import ru.yandex.javacource.malysheva.schedule.manager.Managers;
+import ru.yandex.javacource.malysheva.schedule.manager.NotFoundException;
 import ru.yandex.javacource.malysheva.schedule.manager.TaskType;
 import ru.yandex.javacource.malysheva.schedule.tasks.*;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 public class Main {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NotFoundException {
         InMemoryTaskManager taskManager = (InMemoryTaskManager) Managers.getDefault();
 
         Task task1 = new Task(TaskType.TASK,"Task1", TaskStatus.IN_PROGRESS, "description task1", new Duration(10), LocalDateTime.now());

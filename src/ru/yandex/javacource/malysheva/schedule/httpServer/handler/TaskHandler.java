@@ -1,10 +1,13 @@
-package ru.yandex.javacource.malysheva.schedule.HttpServer;
+package ru.yandex.javacource.malysheva.schedule.httpServer.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import ru.yandex.javacource.malysheva.schedule.httpServer.adapter.DurationTimeAdapter;
+import ru.yandex.javacource.malysheva.schedule.httpServer.adapter.LocalDateTimeAdapter;
+import ru.yandex.javacource.malysheva.schedule.manager.NotFoundException;
 import ru.yandex.javacource.malysheva.schedule.manager.TaskManager;
 import ru.yandex.javacource.malysheva.schedule.manager.TaskType;
 import ru.yandex.javacource.malysheva.schedule.tasks.Duration;
@@ -137,17 +140,11 @@ public class TaskHandler implements HttpHandler {
             }
 
             Task existingTask = taskManager.getTask(taskId);
-            if (existingTask == null) {
-                log("Task not found for deletion: ID " + taskId);
-                sendResponse(exchange, 404, "Task not found");
-                return;
-            }
 
             log("Attempting to delete task with ID: " + taskId);
 
             try {
                 taskManager.deleteTask(taskId);
-
                 String responseBody = gson.toJson(Map.of(
                         "message", "Task deleted successfully",
                         "taskId", taskId,
@@ -214,7 +211,7 @@ public class TaskHandler implements HttpHandler {
         sendResponse(exchange, 200, gson.toJson(tasks));
     }
 
-    private void handleGetTaskById(HttpExchange exchange, int id) throws IOException {
+    private void handleGetTaskById(HttpExchange exchange, int id) throws IOException, NotFoundException {
         Task task = taskManager.getTask(id);
         if (task != null) {
             sendResponse(exchange, 200, gson.toJson(task));
